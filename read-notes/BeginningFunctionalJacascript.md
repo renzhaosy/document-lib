@@ -1,11 +1,11 @@
 
-# JavaScript + ES6 函数式编程 读书笔记
+# 精读《JavaScript+ES6 函数式编程》
 
-## 简介
+> 函数式编程是一种编程范式，函数式思维必不可少。
 
-JavaScript+ES6 函数式编程  
-Beginning Functional Jacascript  
-Anto Aravinth
+## 前言
+
+函数式编程在前端已经是一个非常热门的话题，而且可以看到现在很多的代码库，例如React，都大量使用着函数式编程思想。
 
 ## Q & A
 
@@ -23,12 +23,14 @@ Anto Aravinth
 
 - 引用透明性(Referential Transparency): 所有的函数对于相同的输入都将返回相同的值。(在并发代码和可缓存代码中发挥重要作用)
 - 无副作用
+- 函数是一等公民
 
-### 纯函数
+## 纯函数 & 好处
 
 大多数函数式编程的好处来自于编写纯函数。
 
 纯函数定义： 纯函数是对给定的注入返回相同的输出的函数。
+纯函数的好处：
 
 - 纯函数产生可测试的代码，纯函数不应改变任何外部环境的变量。
 - 合理的代码
@@ -37,13 +39,17 @@ Anto Aravinth
 - 纯函数应该被设计为只做一件事。（只做一件事并把它做到完美是 UNIX 的哲学）
 - 纯函数可以组合
 
-## 高阶函数
+## 常见的函数式编程
+
+### 闭包
+
+### 高阶函数
 
 高阶函数 HOC(Higher-Order Function)： 高阶函数是接受函数作为其参数并且/或者返回函数座位输出的函数。
 
 > 当一门语言允许函数作为任何其他数据类型使用时，函数被称为一等公民。也就是说函数可被赋值给变量，作为参数传递，也可被其他函数返回。
 
-## 数组的函数式编程
+### 数组的函数式编程
 
 ```js
 const map = (arr, fn) => {
@@ -94,7 +100,7 @@ const zip = (leftArr, rightArr, fn) => {
 };
 ```
 
-#### 柯里化
+### 柯里化
 
 柯里化： 把一个多参数函数转换为一个嵌套的一元函数的过程。
 
@@ -105,7 +111,7 @@ const curry = (fn) => {
   }
   return function curryFn(...args) {
     if (args.length < fn.length) {
-      return function() {
+      return function () {
         return curryFn.apply(null, args.concat([].slice.call(arguments)));
       };
     }
@@ -115,24 +121,24 @@ const curry = (fn) => {
 };
 
 // 利用柯里化查找数组中含有数字的项
-const match = curry(function(expr, string) {
+const match = curry(function (expr, string) {
   return string.match(expr);
 });
 let hasNumber = match(/[0-9]+/);
-let arrayFilter = curry(function(f, ary) {
+let arrayFilter = curry(function (f, ary) {
   return ary.filter(f);
 });
 let findNumberInArray = arrayFilter(hasNumber);
 console.log(findNumberInArray(['js', 'numqwe1'])); // 'numqwe1'
 ```
 
-#### 偏函数 （partial）
+### 偏函数 （partial）
 
 ```js
-const partial = function(fn, ...partialArgs) {
+const partial = function (fn, ...partialArgs) {
   let args = partialArgs;
 
-  return function(...fullArguments) {
+  return function (...fullArguments) {
     let argCount = 0;
     let _args = [...args];
 
@@ -158,7 +164,7 @@ prettyPrintJson(obj1); // {"foo": "bar","bar": "foo"}
 prettyPrintJson(obj2); // {"foo": "test"}
 ```
 
-#### 组合
+### 组合
 
 compose 数据流从右往左
 
@@ -171,7 +177,7 @@ const compose = (...fns) => {
   }
 
   return (...values) => {
-    return fns.reverse().reduce(function(ac, fn) {
+    return fns.reverse().reduce(function (ac, fn) {
       return fn(ac);
     }, values);
   };
@@ -194,12 +200,14 @@ const composeA = (...fns) => {
 const splitString = (str) => str.split(' ');
 const countA = (arr) => arr.length;
 const oddOrEven = (ip) => (ip % 2 === 0 ? 'even' : 'odd');
-const countStringW = compose(
-  oddOrEven,
-  countA,
-  splitString
-);
+const countStringW = compose(oddOrEven, countA, splitString);
 
 const result = countStringW('test work count string'); // even
 console.log(result);
 ```
+
+## 结束语
+
+更多优质文章请关注 `木匠的博客`
+
+[](https://renzhaosy.cn/document/doc)
