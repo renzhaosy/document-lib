@@ -1,4 +1,4 @@
-# Promise 简单实现
+# 手写实现 - Promise
 
 > 这里主要是简单实现 Promise
 

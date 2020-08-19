@@ -144,19 +144,6 @@ a.hello(); //hello，有效
 | String   | 'null'    | 'undefined' | 'true'        | 'false'        | NumberToString | -              | TypeError | 拆箱转换 |
 | Object   | TypeError | TypeError   | 装箱转换      | 装箱转换       | 装箱转换       | 装箱转换       | 装箱转换  | -        |
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 ### 装箱转换
 
 参考上方`Object 类型`
@@ -167,7 +154,7 @@ a.hello(); //hello，有效
 全局的 Symbol 函数无法使用 new 来调用，我们可以利用装箱机制来得到一个 Symbol 对象
 
 ```js
-var symbolObject = function () {
+var symbolObject = function() {
   return this;
 }.call(Symbol('a'));
 console.log(typeof symbolObject); //object console.log(symbolObject instanceof Symbol); //true console.log(symbolObject.constructor == Symbol); //true
@@ -259,7 +246,6 @@ console.log(o + '');
 ### StringToNumber
 
 ### NumberToString
-
 
 ## 类型判断
 
