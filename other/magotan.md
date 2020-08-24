@@ -61,6 +61,27 @@ runtime 提供了 当前环境可用的 ，环境 env、存储 store、请求方
 
 为了统计用户，每次数据处理时都会带上唯一的标识符 `clientId`， 并且对于登录的用户会带上用户的 `token`,用户数据平台绑定用户信息。
 
+#### 异常分类
+
+前端异常种类较多，按照类型以及采集方式可以分为以下几种：
+
+##### JS 代码异常
+
+JS 代码运行时异常， js 发生运行时错误时候，window 会出发 ErrorEent 接口的 error 时间，通过 window.onerror 可以捕获全局的异常
+
+##### Promise 异常
+
+论 try-catch 还是 on-error 都无法捕获 promise 中抛出的错误，需要通过监听全局 unhandlerejection 来捕获此类错误。
+从业务的角度来讲，不一定所有的 promise reject 都属于异常行为，故对于不需要抛出异常的情况，还是尽量通过 promise 来 catch
+
+##### 静态资源加载异常
+
+onerror 不会捕获资源加载异常，需要通过 window.addEventListener(‘error’， callback, true )的方式捕获异常
+
+##### Ajax 请求异常
+
+可考虑代理原声的 xmlhttprequest 或者 axios 对象来实现对 http 请求调用的拦截。
+
 ## 标准
 
 ### 性能指标
