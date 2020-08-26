@@ -45,13 +45,19 @@ runtime 提供了 当前环境可用的 ，环境 env、存储 store、请求方
 
 ![SDK数据流](http://cdn.renzhaosy.cn/daily/前端SDK流程.png)
 
-从上图可以看出 SDK 整体的数据流处理。
+SDK 中基于 pipeline 来实现对数据的处理以及上报。
 
-#### 数据备份
+- SampleRate, 采样处理，当前默认为 1，后续可根据数据类型进行采样
+- PresetProperty, 预留数据处理，主要用于将上报的原始数据完善一些预置字段，例如: clientId 等
+- OfflineStorage, 对数据进行离线存储
+- ReportStrategy, 上报策略，满足两个条件即上报：缓存区溢出、timeout 到期
+- RootReport, 上报处理，每次上报，如失败默认重试两次，上报成功后，触发定时器检查
+
+#### 离线存储
 
 为了防止埋点数据的丢失，数据都会先备份在 localStorage（小程序会存在 storage）中，每次上报时会取出备份数据的前 5 条发送，上报成功后删除。
 
-#### 上报
+#### 日志上报
 
 上报的请求是基于**xhr** 和 **Navigator.sendBeacon**
 (用于发送 leavePage 事件)进行简单的封装。
@@ -96,12 +102,19 @@ FCP (first contentfull)： 首个内容绘制，首个可见元素的绘制时�
 
 从用户的感知来讲，fp 时间接近白屏时间，fcp 主要受 index.html dom 结构以及 loading 等影响。故我们主要以**fp**为参考指标。fp/fcp 的采集，可以直接使用 paint timing api 来采集，从测试数据来看，**fp 都比较接近白屏时间**。
 
+FP 指标，根据浏览器的兼容性，依次按照如下方式进行采集
+
+window.performance.getEntries
+window.performance.timing
+
 #### FMP (fitst meanningful paint)
 
 首个有效绘制，也就是页面的核心元素渲染完成时间点。不同网站，何核心元素不一样。比较接近首屏屏时间。
 
 FMP 目前来看并没有标准的 API 支持，google lighthouse 中采集的 fmp 的准确率仅为 70%左右。但是可以看到主流的前端监控，基本都将 FMP 作为一项重要的性能指标。我们可以根据自身的业务特点，做关键的特征提取，然后调整权重算法，达到较为接近真实数据的指标。
 
+FMP 算法主要基于 Element Timing 以及权重
+
 ## 总结
 
-这章主要是介绍了 前端监控中 前端埋点 SDK 相关的东西。之后还会具体介绍性能指标采集相关。
+这章主要是介绍了 前端监控中 前端埋点 SDK 相关的东西。
